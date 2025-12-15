@@ -21,9 +21,10 @@ body {
     align-items: center;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
     font-family: 'Unbounded', sans-serif;
     color: #ffffff;
+    text-align: center;
 }
 
 .blob {
