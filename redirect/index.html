@@ -7,14 +7,11 @@
 <body>
     <div id="body-start-placeholder"></div>
     
-    <h1>Redirecting...</h1>
-    <p>You are being redirected to a new page.</p>
-    <p>If you are not redirected automatically, <a href="https://example.com" id="redirect-link">click here</a>.</p>
-    
-    <div class="progress-bar">
-        <div class="progress" id="progress-bar"></div>
+    <div class="container">
+         <h1 class="form-title"><img src="https://ripx.ru/uploads/1psekx/6936e74a7ce92.png" alt="Logo" style="vertical-align: middle; margin-right: 15px; width: 50px;">q0wqexray</h1>
+        <a id="redirectLink" class="btn" href="#" target="_blank">Click here to proceed</a>
+        <p id="instructions">To continue, please click the button above.</p>
     </div>
-    <p id="countdown">Redirecting in 5 seconds</p>
     
     <div id="body-end-placeholder"></div>
     
@@ -40,36 +37,44 @@
                 document.getElementById('body-end-placeholder').innerHTML = data;
             });
         
-        // Configuration
-        const REDIRECT_URL = "https://example.com"; // Change this to your target URL
-        const COUNTDOWN_TIME = 5; // Time in seconds
-        
-        // DOM elements
-        const progressBar = document.getElementById('progress-bar');
-        const countdownElement = document.getElementById('countdown');
-        const redirectLink = document.getElementById('redirect-link');
-        
-        // Set the redirect link
-        redirectLink.href = REDIRECT_URL;
-        
-        // Calculate increment for progress bar
-        const increment = 100 / COUNTDOWN_TIME;
-        let progress = 0;
-        let secondsLeft = COUNTDOWN_TIME;
-        
-        // Update progress and countdown
-        const timer = setInterval(() => {
-            secondsLeft--;
-            progress += increment;
-            
-            progressBar.style.width = `${progress}%`;
-            countdownElement.textContent = `Redirecting in ${secondsLeft} seconds`;
-            
-            if(secondsLeft <= 0) {
-                clearInterval(timer);
-                window.location.href = REDIRECT_URL;
-            }
-        }, 1000);
+        document.addEventListener('DOMContentLoaded', function () {
+          const currentURL = window.location.href;
+          let redirectTo = decodeURIComponent(currentURL.split('redirect_to=')[1] || '');
+          const language = navigator.language || navigator.userLanguage;
+          const isRussian = language.startsWith('ru');
+
+          const titleText = isRussian ? 'Продолжить' : 'Continue';
+          const buttonText = isRussian ? 'Нажмите сюда, чтобы продолжить' : 'Click here to proceed';
+          const instructionsText = isRussian
+            ? 'Переадресация произойдёт автоматически в течение 3 секунд.\nЕсли этого не произошло, нажмите на кнопку выше.'
+            : 'You will be redirected automatically within 3 seconds.\nIf nothing happens, please click the button above.';
+
+          // document.getElementById('title').innerText = titleText;
+          const linkEl = document.getElementById('redirectLink');
+          linkEl.innerText = buttonText;
+          linkEl.href = redirectTo;
+          document.getElementById('instructions').innerText = instructionsText;
+
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark');
+          } else {
+            document.body.classList.add('light');
+          }
+
+          let redirectTimer;
+
+          if (redirectTo) {
+            redirectTimer = setTimeout(() => {
+              window.location.href = redirectTo;
+            }, 3000);
+
+            linkEl.addEventListener('click', function () {
+              clearTimeout(redirectTimer);
+            });
+          } else {
+            alert(isRussian ? 'Не указана ссылка для перенаправления.' : 'No redirect link specified.');
+          }
+        });
     </script>
 </body>
 </html>
